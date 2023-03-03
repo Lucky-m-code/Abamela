@@ -15,6 +15,7 @@ Route::namespace('Api')->name('api.')->group(function(){
 		Route::post('register', 'RegisterController@register');
 		
 	    Route::post('password/email', 'ForgotPasswordController@sendResetCodeEmail');
+
 	    Route::post('password/verify-code', 'ForgotPasswordController@verifyCode');
 	    
 	    Route::post('password/reset', 'ResetPasswordController@reset');
@@ -25,6 +26,7 @@ Route::namespace('Api')->name('api.')->group(function(){
 		Route::get('logout', 'Auth\LoginController@logout');
 		Route::get('authorization', 'AuthorizationController@authorization')->name('authorization');
 	    Route::get('resend-verify', 'AuthorizationController@sendVerifyCode')->name('send.verify.code');
+		
 	    Route::post('verify-email', 'AuthorizationController@emailVerification')->name('verify.email');
 	    Route::post('verify-sms', 'AuthorizationController@smsVerification')->name('verify.sms');
 	    Route::post('verify-g2fa', 'AuthorizationController@g2faVerification')->name('go2fa.verify');
