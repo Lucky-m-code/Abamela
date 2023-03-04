@@ -16,7 +16,8 @@ class CreateSmsGatewaysTable extends Migration
         Schema::create('sms_gateways', function (Blueprint $table) {
             $table->id();
             $table->string('name',70)->nullable();
-            $table->string('alias',70)->nullable();
+            $table->string('alias',70)->nullable()
+            ;
             $table->text('credentials')->nullable();
             $table->timestamps();
         });

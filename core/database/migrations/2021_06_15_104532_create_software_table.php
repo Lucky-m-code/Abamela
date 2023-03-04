@@ -24,6 +24,7 @@ class CreateSoftwareTable extends Migration
             $table->string('document_file', 40);
             $table->string('upload_software', 40);
             $table->string('file_size')->nullable();
+            
             $table->string('demo_url');
             $table->decimal('amount', 28,8)->default(0);
             $table->text('description');

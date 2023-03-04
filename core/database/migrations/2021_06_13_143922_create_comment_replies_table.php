@@ -18,6 +18,7 @@ class CreateCommentRepliesTable extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('comment_id')->nullable();
             $table->integer('software_id')->nullable();
+            
             $table->integer('service_id')->nullable();
             $table->integer('job_id')->nullable();
             $table->string('comments')->nullable();

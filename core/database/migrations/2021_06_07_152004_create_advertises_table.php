@@ -18,6 +18,8 @@ class CreateAdvertisesTable extends Migration
             $table->tinyInteger('type')->default(0);
             $table->string('size', 191)->nullable();
             $table->string('redirect_url')->nullable();
+
+            
             $table->string('adimage')->nullable();
             $table->string('script')->nullable();
             $table->timestamps();

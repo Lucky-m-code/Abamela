@@ -18,7 +18,9 @@ class CreateWorkDeliveriesTable extends Migration
             $table->unsignedInteger('booking_id');
             $table->unsignedInteger('sender_id');
             $table->unsignedInteger('receiver_id');
+            
             $table->string('work_file')->nullable();
+
             $table->text('details');
             $table->timestamps();
         });

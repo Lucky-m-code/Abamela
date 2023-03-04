@@ -17,6 +17,7 @@ class CreateConmmentsTable extends Migration
             $table->id();
             $table->integer('user_id')->nullable();
             $table->integer('service_id')->nullable();
+            
             $table->integer('software_id')->nullable();
             $table->integer('job_id')->nullable();
             $table->string('comments');
