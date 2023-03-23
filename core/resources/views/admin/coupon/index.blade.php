@@ -15,6 +15,7 @@
                                     <th>@lang('Status')</th>
                                     <th>@lang('Last Update')</th>
                                     <th>@lang('Action')</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>

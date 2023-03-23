@@ -28,6 +28,42 @@ class CommentController extends Controller
             $comment->comments = $request->comment;
             $comment->save();
         }elseif(array_key_exists("software_id", $commentRequest)){
+            'service_id' => 'required|exists:services,id'
+        ]);
+        $service = Service::where('id', $request->service_id)->where('status', 1)->firstOrFail();
+        $comment = new Comment();
+        $comment->user_id = Auth::user()->id;
+        $comment->service_id = $service->id;
+        $comment->comments = $request->comment;
+        $comment->save();
+    }elseif(array_key_exists("software_id", $commentRequest)){
+        'service_id' => 'required|exists:services,id'
+    ]);
+    $service = Service::where('id', $request->service_id)->where('status', 1)->firstOrFail();
+    $comment = new Comment();
+    $comment->user_id = Auth::user()->id;
+    $comment->service_id = $service->id;
+    $comment->comments = $request->comment;
+    $comment->save();
+}elseif(array_key_exists("software_id", $commentRequest)){
+    'service_id' => 'required|exists:services,id'
+]);
+$service = Service::where('id', $request->service_id)->where('status', 1)->firstOrFail();
+$comment = new Comment();
+$comment->user_id = Auth::user()->id;
+$comment->service_id = $service->id;
+$comment->comments = $request->comment;
+$comment->save();
+}elseif(array_key_exists("software_id", $commentRequest)){
+    'service_id' => 'required|exists:services,id'
+]);
+$service = Service::where('id', $request->service_id)->where('status', 1)->firstOrFail();
+$comment = new Comment();
+$comment->user_id = Auth::user()->id;
+$comment->service_id = $service->id;
+$comment->comments = $request->comment;
+$comment->save();
+}elseif(array_key_exists("software_id", $commentRequest)){
             $request->validate([
                 'comment' => 'required|string|max:500',
                 'software_id' => 'required|exists:software,id'

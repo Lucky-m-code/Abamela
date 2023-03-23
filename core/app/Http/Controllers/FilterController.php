@@ -65,6 +65,33 @@ class FilterController extends Controller
                 $q->where('status', 1);
             })->where('title', 'LIKE', "%$search%")->with('user')->paginate(getPaginate());
         return view($this->activeTemplate . 'service', compact('services', 'pageTitle', 'emptyMessage', 'search'));
+        $pageTitle = "Service search";
+        $emptyMessage = "No data found";
+        $search = $request->search;
+        $services = Service::where('status', 1)->whereHas('category', function($q){
+                $q->where('status', 1);
+            })->where('title', 'LIKE', "%$search%")->with('user')->paginate(getPaginate());
+        return view($this->activeTemplate . 'service', compact('services', 'pageTitle', 'emptyMessage', 'search'));
+        $pageTitle = "Service search";
+        $emptyMessage = "No data found";
+        $search = $request->search;
+        $services = Service::where('status', 1)->whereHas('category', function($q){
+                $q->where('status', 1);
+            })->where('title', 'LIKE', "%$search%")->with('user')->paginate(getPaginate());
+        return view($this->activeTemplate . 'service', compact('services', 'pageTitle', 'emptyMessage', 'search'));
+        $pageTitle = "Service search";
+        $emptyMessage = "No data found";
+        $search = $request->search;
+        $services = Service::where('status', 1)->whereHas('category', function($q){
+                $q->where('status', 1);
+            })->where('title', 'LIKE', "%$search%")->with('user')->paginate(getPaginate());
+        return view($this->activeTemplate . 'service', compact('services', 'pageTitle', 'emptyMessage', 'search'));    $pageTitle = "Service search";
+        $emptyMessage = "No data found";
+        $search = $request->search;
+        $services = Service::where('status', 1)->whereHas('category', function($q){
+                $q->where('status', 1);
+            })->where('title', 'LIKE', "%$search%")->with('user')->paginate(getPaginate());
+        return view($this->activeTemplate . 'service', compact('services', 'pageTitle', 'emptyMessage', 'search'));
     }
 
 

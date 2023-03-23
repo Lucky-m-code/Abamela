@@ -3,46 +3,48 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Service;
+use App\Models\Software;
 use App\Models\Coupon;
-use App\Models\ExtraService;
-use App\Models\GeneralSetting;
 use App\Models\Booking;
 use App\Models\Transaction;
-use App\Models\AdminNotification;
+use App\Models\GeneralSetting;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\AdminNotification;
 use App\Models\GatewayCurrency;
 use App\Models\Deposit;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class BookingController extends Controller
+
+class SoftwareBuyController extends Controller
 {
 	public function __construct(){
         $this->activeTemplate = activeTemplate();
     }
-    
-    public function serviceBooking($slug, $id)
+
+    public function softwareBuy($slug, $id)
     {
         if(session()->has('coupon')){
             session()->forget('coupon');
         }
+        $pageTitle = "Software buy now";
         $coupon = Coupon::where('status', 1)->get();
-    	$pageTitle = "Service Booking";
-    	$service = Service::where('status', 1)->whereHas('category', function($q){
+        $software = Software::where('status', 1)->whereHas('category', function($q){
             $q->where('status', 1);
         })->where('id', decrypt($id))->firstOrFail();
-        return view($this->activeTemplate. 'service_booking', compact('pageTitle', 'service', 'coupon'));
+        return view($this->activeTemplate. 'software_buy', compact('pageTitle', 'software', 'coupon'));
     }
 
-
-    public function applyCoupon(Request $request)
+    public function applyCouponSoftware(Request $request)
     {
-        $request->validate([
-            'serviceId' => 'required|exists:services,id',
-        ]);
-        if (session('coupon')) {
+        if (session()->has('coupon')) {
             $notify = 'The coupon has already been applied';
+            return response()->json(['error'=>$notify]);
+        }
+        $software = Software::find($request->softwareId);
+        if(!$software)
+        {
+            $notify = 'Invalid software';
             return response()->json(['error'=>$notify]);
         }
         $coupon = Coupon::where('code', $request->couponCode)->where('status', 1)->first();
@@ -51,37 +53,34 @@ class BookingController extends Controller
             $notify = 'This coupon doesn\'t exist';
             return response()->json(['error'=>$notify]);
         }
-        $service = Service::findOrFail($request->serviceId);
-        $total = $service->price * $request->qty;
-
         $response = [
             'code'      => $coupon->code,
-            'amount'    => getAmount($coupon->discount($total)),
+            'amount'    => getAmount($coupon->discount($software->amount)),
         ];
-        session()->put('coupon', $coupon->code);
+        session()->put('coupon',$coupon->code);
         $response['success'] = 'Coupon has applied successfully';
         return response()->json($response);
     }
 
-    public function serviceBooked(Request $request)
+    public function softwareBuyStore(Request $request)
     {
+
         $request->validate([
-            'serviceId' => 'required|exists:services,id',
-            'qty' => 'required|min:1|max:30',
-            'payment' => 'required|in:wallet,checkout'
+            'payment' => 'required|in:wallet,checkout',
+            'software_id' => 'required|exists:software,id',
         ]);
         $user = Auth::user();
-        $service = Service::where('status', 1)->where('id', $request->serviceId)->firstOrFail();
-        if($service->user_id == $user->id){
-            $notify[] = ["error","You can not be booked your self-service"];
+        $software = Software::where('status', 1)->where('id', $request->software_id)->firstOrFail();
+        if($software->user_id == $user->id){
+            $notify[] = ["error","You can not purchase your self software"];
             return back()->withNotify($notify);
         }
         if($request->payment == "wallet"){
-            $this->orderWithWallet($service->id, $request->qty, $request->extraservice);
+            $this->orderWithWallet($software->id);
             return back();
         }
         elseif($request->payment == "checkout"){
-            $this->orderWithCheckout($service->id, $request->qty, $request->extraservice);
+            $this->orderWithCheckout($software->id);
             return redirect()->route('user.payment.method');
         }
         else{
@@ -90,30 +89,21 @@ class BookingController extends Controller
         }
     }
 
-    private function orderWithWallet($serviceId, $qty, $extraService){
-        $general = GeneralSetting::first();
+    private function orderWithWallet($serviceId)
+    {
+    	$general = GeneralSetting::first();
         $user = Auth::user();
-        $extraPrice = 0;
         $discount = 0;
-        $service = Service::findOrFail($serviceId);
-        if($extraService)
-        {
-            $extraArray = explode(",",$extraService);
-            foreach ($extraArray as $newValue) {
-                $extra = ExtraService::where('id',$newValue)->where('service_id', $service->id)->firstOrFail();
-                $extraPrice += $extra->price;
-            }
-        }
-        $serviceTotalPrice = $service->price * $qty;
+        $software = Software::findOrFail($serviceId);
         if(session()->has('coupon'))
         {
-            $coupon   = Coupon::where('code', session()->get('coupon'))->where('status', 1)->first();
+            $coupon = Coupon::where('code', session()->get('coupon'))->where('status', 1)->first();
             if($coupon){
-                $discount = getAmount($coupon->discount($serviceTotalPrice));
+                $discount = getAmount($coupon->discount($software->amount));
             }
             session()->forget('coupon');
         }
-        $totalPrice = (($serviceTotalPrice + $extraPrice) - $discount);
+        $totalPrice = (($software->amount) - $discount);
         if($totalPrice > $user->balance)
         {
             $notify[] = ['error', 'Your account '.getAmount($user->balance).' '.$general->cur_text.' balance not enough! please deposit money'];
@@ -121,15 +111,14 @@ class BookingController extends Controller
         }
         $booking = new Booking();
         $booking->user_id = $user->id;
-        $booking->service_id = $service->id;
-        $booking->qty = $qty;
+        $booking->software_id = $software->id;
+        $booking->qty = 1;
         $booking->amount = $totalPrice;
         $booking->discount = $discount;
         $booking->order_number = getTrx();
-        $booking->extra_service = $extraService;
-        $booking->status = 1;
+        $booking->status = 3; 
         $booking->updated_at = Carbon::now();
-        $booking->status_updated_at = Carbon::now();
+        $booking->working_status = 1; 
         $booking->save();
 
         $user->balance -= $booking->amount;
@@ -141,20 +130,46 @@ class BookingController extends Controller
         $transaction->post_balance = $user->balance;
         $transaction->trx_type = '-';
         $transaction->trx = $booking->order_number;
-        $transaction->details = "Service booking payment";
+        $transaction->details = "Software purchase payment";
         $transaction->save();
+
+        $softwareUser = User::where('id', $software->user_id)->first();
+        $charge = (($booking->amount / 100) * $general->charge);
+        $payableAmountUser = ($booking->amount - $charge);
+
+        $softwareUser->balance += $payableAmountUser;
+        $softwareUser->income += $payableAmountUser;
+        $softwareUser->save();
+        rankUser($softwareUser->id);
+
+        $transaction = new Transaction();
+        $transaction->user_id = $softwareUser->id;
+        $transaction->amount = $payableAmountUser;
+        $transaction->post_balance = $softwareUser->balance;
+        $transaction->charge = $charge;
+        $transaction->trx_type = '+';
+        $transaction->trx = $booking->order_number;
+        $transaction->details = "Payment for ".$booking->order_number;
+        $transaction->save();
+
 
         $adminNotification = new AdminNotification();
         $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'Service booking payment '.$user->username;
-        $adminNotification->click_url = urlPath('admin.booking.service.details', $booking->id);
+        $adminNotification->title = 'Software purchase complete '.$user->username;
+        $adminNotification->click_url = urlPath('admin.sales.software.index');
         $adminNotification->save();
 
-        $serviceUser = User::where('id', $service->user_id)->first();
-        notify($serviceUser, 'SERVICE_BOOKING', [
+        notify($softwareUser, 'SOFTWARE_PURCHASE', [
             'order_number' => $booking->order_number, 
             'amount' => getAmount($booking->amount),
             'currency' => $general->cur_text,
+        ]);
+
+        notify($softwareUser, 'PAYMENT_SELLER', [
+            'amount' => getAmount($payableAmountUser),
+            'currency' => $general->cur_text,
+            'order_number' => $booking->order_number,
+            'post_balance' => getAmount($softwareUser->balance)
         ]);
 
         notify($user, 'PAYMENT_COMPLETE', [
@@ -163,46 +178,34 @@ class BookingController extends Controller
             'order_number' => $booking->order_number,
             'post_balance' => getAmount($user->balance)
         ]);
-        $notify[] = ["success","Service booking has been created"];
+        $notify[] = ["success","Software purchase done"];
         return redirect()->route('user.home')->withNotify($notify);
     }
 
-    private function orderWithCheckout($serviceId, $qty, $extraService){
+    private function orderWithCheckout($softwareId){
         $general = GeneralSetting::first();
         $user = Auth::user();
-        $extraPrice = 0;
         $discount = 0;
-        $service = Service::findOrFail($serviceId);
-        if($extraService)
-        {
-            $extraArray = explode(",",$extraService);
-            foreach ($extraArray as $newValue) {
-                $extra = ExtraService::findOrFail($newValue);
-                $extraPrice += $extra->price;
-            }
-        }
-        $serviceTotalPrice = $service->price * $qty;
+        $software = Software::findOrFail($softwareId);
+        $softwareTotalPrice = $software->amount;
         if(session()->has('coupon'))
         {
-            $coupon   = Coupon::where('code', session()->get('coupon'))->where('status', 1)->first();
-            if($coupon)
-            {
-                $discount = getAmount($coupon->discount($serviceTotalPrice));
+            $coupon = Coupon::where('code', session()->get('coupon')['code'])->where('status', 1)->first();
+            if($coupon){
+                $discount = getAmount($coupon->discount($softwareTotalPrice));
             }
             session()->forget('coupon');
         }
-        $totalPrice = (($serviceTotalPrice + $extraPrice) - $discount);
+        $totalPrice = ($softwareTotalPrice - $discount);
         $booking = new Booking();
         $booking->user_id = $user->id;
-        $booking->service_id = $service->id;
-        $booking->qty = $qty;
+        $booking->software_id = $software->id;
+        $booking->qty = 1;
         $booking->amount = $totalPrice;
         $booking->discount = $discount;
         $booking->order_number = getTrx();
-        $booking->extra_service = $extraService;
         $booking->status = 0; 
         $booking->updated_at = Carbon::now();
-        $booking->status_updated_at = Carbon::now(); 
         $booking->save();
         session()->put('booking',$booking->order_number);
         return back();
@@ -210,64 +213,5 @@ class BookingController extends Controller
 
 
 
-    public function payment()
-    {
-        $gatewayCurrency = GatewayCurrency::whereHas('method', function ($gate) {
-            $gate->where('status', 1);
-        })->with('method')->orderby('method_code')->get();
-        $pageTitle = 'Payment Methods';
-        return view($this->activeTemplate . 'user.payment', compact('gatewayCurrency', 'pageTitle'));
-    }
 
-
-
-    public function paymentInsert(Request $request)
-    {
-
-        $request->validate([
-            'booking_number' => 'required|exists:bookings,order_number',
-            'method_code' => 'required',
-            'currency' => 'required',
-        ]);
-        $booking = Booking::where('status', 0)->where('order_number', $request->booking_number)->first();
-        if(!$booking){
-            $notify[] = ['error', 'Invalid booking number'];
-            return back()->withNotify($notify);
-        }
-        $user = auth()->user();
-        $gate = GatewayCurrency::whereHas('method', function ($gate) {
-            $gate->where('status', 1);
-        })->where('method_code', $request->method_code)->where('currency', $request->currency)->first();
-        if (!$gate) {
-            $notify[] = ['error', 'Invalid gateway'];
-            return back()->withNotify($notify);
-        }
-
-        if ($gate->min_amount > $booking->amount || $gate->max_amount < $booking->amount) {
-            $notify[] = ['error', 'Please follow deposit limit'];
-            return back()->withNotify($notify);
-        }
-
-        $charge = $gate->fixed_charge + ($booking->amount * $gate->percent_charge / 100);
-        $payable = $booking->amount + $charge;
-        $final_amo = $payable * $gate->rate;
-
-        $data = new Deposit();
-        $data->user_id = $user->id;
-        $data->booking_id = $booking->id;
-        $data->method_code = $gate->method_code;
-        $data->method_currency = strtoupper($gate->currency);
-        $data->amount = $booking->amount;
-        $data->charge = $charge;
-        $data->rate = $gate->rate;
-        $data->final_amo = $final_amo;
-        $data->btc_amo = 0;
-        $data->btc_wallet = "";
-        $data->trx = $booking->order_number;
-        $data->try = 0;
-        $data->status = 0;
-        $data->save();
-        session()->put('Track', $data->trx);
-        return redirect()->route('user.deposit.preview');
-    }
 }

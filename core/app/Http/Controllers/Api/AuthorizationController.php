@@ -245,6 +245,39 @@ class AuthorizationController extends Controller
                 'message'=>['error'=>$validator->errors()->all()],
             ]);
         }
+        if ($validator->fails()) {
+            return response()->json([
+                'code'=>200,
+                'status'=>'ok',
+                'message'=>['error'=>$validator->errors()->all()],
+            ]);
+        }
+        if ($validator->fails()) {
+            return response()->json([
+                'code'=>200,
+                'status'=>'ok',
+                'message'=>['error'=>$validator->errors()->all()],
+            ]);
+        } if ($validator->fails()) {
+            return response()->json([
+                'code'=>200,
+                'status'=>'ok',
+                'message'=>['error'=>$validator->errors()->all()],
+            ]);
+        }
+        if ($validator->fails()) {
+            return response()->json([
+                'code'=>200,
+                'status'=>'ok',
+                'message'=>['error'=>$validator->errors()->all()],
+            ]);
+        } if ($validator->fails()) {
+            return response()->json([
+                'code'=>200,
+                'status'=>'ok',
+                'message'=>['error'=>$validator->errors()->all()],
+            ]);
+        }
 
 
         $code = $request->code;
