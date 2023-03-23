@@ -18,8 +18,10 @@ Route::namespace('Api')->name('api.')->group(function(){
 		Route::post('login', 'LoginController@login');
 
 		Route::post('register', 'RegisterController@register');
+
 		
 	    Route::post('password/email', 'ForgotPasswordController@sendResetCodeEmail');
+
 
 	    Route::post('password/verify-code', 'ForgotPasswordController@verifyCode');
 	    
@@ -45,7 +47,11 @@ Route::namespace('Api')->name('api.')->group(function(){
 
 	    Route::post('verify-g2fa', 'AuthorizationController@g2faVerification')->name('go2fa.verify');
 
+
+
+
 	    Route::middleware(['checkStatusApi'])->group(function(){
+
 	    	Route::get('dashboard',function(){
 	    		return auth()->user();
 	    	});
@@ -55,6 +61,7 @@ Route::namespace('Api')->name('api.')->group(function(){
 
             // Withdraw
             Route::get('withdraw/methods', 'UserController@withdrawMethods');
+			
 
             Route::post('withdraw/store', 'UserController@withdrawStore');
 
@@ -65,6 +72,7 @@ Route::namespace('Api')->name('api.')->group(function(){
 
             // Deposit
             Route::get('deposit/methods', 'PaymentController@depositMethods');
+
 
             Route::post('deposit/insert', 'PaymentController@depositInsert');
 
