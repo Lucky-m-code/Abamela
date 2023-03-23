@@ -19,6 +19,8 @@
                             <tr>
                                 <td data-label="@lang('Short Code')">@{{fullname}}</td>
                                 <td data-label="@lang('Description')">@lang('User Fullname')</td>
+
+                                
                             </tr>
                             <tr>
                                 <td data-label="@lang('Short Code')">@{{username}}</td>

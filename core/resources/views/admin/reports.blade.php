@@ -10,6 +10,7 @@
               <tr>
                 <th>@lang('Type')</th>
                 <th>@lang('Message')</th>
+
                 <th>@lang('Status')</th>
               </tr>
             </thead>
@@ -18,6 +19,7 @@
               <tr>
                 <td>{{ @$report->req_type }}</td>
                 <td class="text-center white-space-wrap">{{ @$report->message }}</td>
+                
                 <td><span class="badge badge--{{ @$report->status_class }}">{{ @$report->status_text }}</span></td>
               </tr>
               @empty

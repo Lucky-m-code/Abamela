@@ -18,10 +18,14 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Name')
                             <span class="font-weight-bold">{{ __($admin->name) }}</span>
+
+
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Username')
                             <span  class="font-weight-bold">{{ __($admin->username) }}</span>
+
+                            
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Email')

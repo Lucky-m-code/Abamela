@@ -19,6 +19,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Name')
                             <span class="font-weight-bold">{{__($admin->name)}}</span>
+
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -71,6 +72,7 @@
                             <div class="col-md-6">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Name')</label>
+                                    
                                     <input class="form-control" type="text" name="name" value="{{ auth()->guard('admin')->user()->name }}" >
                                 </div>
 

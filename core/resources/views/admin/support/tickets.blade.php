@@ -16,7 +16,9 @@
                                 <th>@lang('Last Reply')</th>
                                 <th>@lang('Action')</th>
                             </tr>
-                            </thead>
+                            </thead
+
+                            
                             <tbody>
                             @forelse($items as $item)
                                 <tr>

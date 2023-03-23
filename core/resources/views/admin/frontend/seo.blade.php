@@ -20,7 +20,8 @@
                                                 </div>
                                             </div>
                                             <div class="avatar-edit">
-                                                <input type="file" class="profilePicUpload" name="image_input" id="profilePicUpload1" accept=".png, .jpg, .jpeg">
+                                                <input type="file" class="profilePicUpload" n
+                                            ame="image_input" id="profilePicUpload1" accept=".png, .jpg, .jpeg">
                                                 <label for="profilePicUpload1" class="bg--success">@lang('Upload Image')</label>
                                                 <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg')</b>. @lang('Image will be resized into') {{imagePath()['seo']['size']}}@lang('px'). </small>
                                             </div>

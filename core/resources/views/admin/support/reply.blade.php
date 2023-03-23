@@ -15,7 +15,8 @@
                                 @elseif($ticket->status == 1)
                                     <span class="badge badge--primary py-1 px-2">@lang('Answered')</span>
                                 @elseif($ticket->status == 2)
-                                    <span class="badge badge--warning py-1 px-2">@lang('Customer Reply')</span>
+                                    <span class="badge badge--warning py-1 px
+    -2">@lang('Customer Reply')</span>
                                 @elseif($ticket->status == 3)
                                     <span class="badge badge--dark py-1 px-2">@lang('Closed')</span>
                                 @endif

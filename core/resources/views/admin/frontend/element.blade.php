@@ -25,6 +25,7 @@
                                                 <div class="form-group">
                                                     <label>{{ __(inputTitle($imgKey)) }}</label>
                                                     <div class="image-upload">
+                                                        
                                                         <div class="thumb">
                                                             <div class="avatar-preview">
                                                                 <div class="profilePicPreview" style="background-image: url({{getImage('assets/images/frontend/' . $key .'/'. @$data->data_values->$imgKey,@$section->element->images->$imgKey->size) }})">

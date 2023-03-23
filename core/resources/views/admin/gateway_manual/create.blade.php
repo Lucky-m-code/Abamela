@@ -10,6 +10,7 @@
                             <div class="payment-method-header">
                                 <div class="thumb">
                                     <div class="avatar-preview">
+
                                         <div class="profilePicPreview" style="background-image: url('{{getImage(imagePath()['gateway']['path'],imagePath()['gateway']['size'])}}')"></div>
                                     </div>
                                     <div class="avatar-edit">
@@ -20,6 +21,7 @@
 
                                 <div class="content">
                                     <div class="row mt-4 mb-none-15">
+
                                         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4 mb-15">
                                             <div class="input-group">
                                                 <label class="w-100 font-weight-bold">@lang('Gateway Name') <span class="text-danger">*</span></label>
@@ -110,6 +112,7 @@
 
                                     <div class="col-lg-12">
                                         <div class="card border--primary mt-3">
+                                            
                                             <h5 class="card-header bg--primary  text-white">@lang('User data')
                                                 <button type="button" class="btn btn-sm btn-outline-light float-right addUserData"><i class="la la-fw la-plus"></i>@lang('Add New')
                                                 </button>
