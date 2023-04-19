@@ -10,58 +10,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Date')
                             <span class="font-weight-bold">{{ showDateTime($booking->created_at) }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Order Number')
-                            <span class="font-weight-bold">{{ $booking->order_number }}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Employees')
-                            <span class="font-weight-bold">
-                                <a href="{{ route('admin.users.detail', $booking->biding->user_id) }}">{{ @$booking->biding->user->username }}</a>
-                            </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Buyer')
-                            <span class="font-weight-bold">
-                                <a href="{{ route('admin.users.detail', $booking->user_id) }}">{{ @$booking->user->username }}</a>
-                            </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Delivery Data')
-                            <span class="font-weight-bold">{{diffforhumans($booking->created_at->addDays($booking->biding->job->delivery_time))}}</span>
-                        </li>
-
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Amount')
-                            <span class="font-weight-bold">{{ getAmount($booking->amount ) }} {{ __($general->cur_text) }}</span>
-                        </li>
-
-                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Working Status')
-                            @if($booking->working_status == 0)
-                                <span class="badge badge--primary">@lang('Pending')</span>
-                            @elseif($booking->working_status == 1)
-                                <span class="badge badge--success">@lang('Completed')</span>
-                            @elseif($booking->working_status == 2)
-                                <span class="badge badge--secondary">@lang('Delivered')</span>
-                            @elseif($booking->working_status == 3)
-                                <span class="badge badge--danger">@lang('Cancel')</span>
-                            @elseif($booking->working_status == 4)
-                                <span class="badge badge--dark">@lang('In Progress')</span>
-                            @elseif($booking->working_status == 5)
-                                <span class="badge badge--danger">@lang('Expired')</span>
-                            @elseif($booking->working_status == 6)
-                                <span class="badge badge--warning">@lang('Dispute')</span>
-                                 <button class="btn-info btn-rounded text-white  badge disputeShow" data-dispute="{{$booking->dispute_report}}"><i class="fa fa-info"></i></button>
-                            @endif
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Status')
-                           @if($booking->status == 1)
-                                <span class="badge badge--primary">@lang('Running')</span>
+                        </
                             @elseif($booking->status == 2)
                                 <span class="badge badge--warning">@lang('Payable Both')</span>
                             @elseif($booking->status == 3)

@@ -18,10 +18,7 @@
                             </thead>
                             <tbody>
                             @forelse($email_templates as $template)
-                                <tr>
-                                    <td data-label="@lang('Name')">{{ __($template->name) }}</td>
-                                    <td data-label="@lang('Subject')">{{ __($template->subj) }}</td>
-                                    <td data-label="@lang('Status')">
+                               
                                         @if($template->email_status == 1)
                                             <span class="text--small badge font-weight-normal badge--success">@lang('Active')</span>
                                         @else

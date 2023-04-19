@@ -18,10 +18,7 @@
                             @forelse($subCategorys as $subCategory)
                                 <tr>
                                      <td data-label="@lang('Gateway')">
-                                        <div class="user">
-
-                                            <div class="thumb"><img src="{{getImage(imagePath()['subcategory']['path'].'/'. $subCategory->image,imagePath()['subcategory']['size'])}}" alt="@lang('image')"></div>
-                                            <span class="name">{{__($subCategory->name)}}</span>
+                                
                                         </div>
                                     </td>
                                     <td data-label="@lang('Category')">
